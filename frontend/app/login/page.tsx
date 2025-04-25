@@ -24,7 +24,7 @@ export default function LoginPage() {
               <Rocket className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">DeployMate</CardTitle>
+          <CardTitle className="text-2xl">DeployBro</CardTitle>
           <CardDescription>
             Faça login com sua conta do GitHub para acessar seus repositórios e gerenciar seus deploys
           </CardDescription>

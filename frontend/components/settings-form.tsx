@@ -8,10 +8,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { PlusCircle, Trash2 } from "lucide-react"
+import { Check, ChevronsUpDown, PlusCircle, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command"
+import { timezones } from "@/utils/timezones"
+import { cn } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 // Dados de exemplo para canais do Slack
 const initialSlackChannels = [
@@ -24,7 +29,12 @@ export function SettingsForm() {
   const [slackChannels, setSlackChannels] = useState(initialSlackChannels)
   const [newChannelName, setNewChannelName] = useState("")
   const [newChannelId, setNewChannelId] = useState("")
+  const [openTimezone, setOpenTimezone] = useState(false)
+  const [timezoneOption, setTimezone] = useState("")
   const { toast } = useToast()
+  const {data} = useSession()
+
+  console.log(data)
 
   const addSlackChannel = () => {
     if (!newChannelName.trim() || !newChannelId.trim()) {
@@ -61,6 +71,8 @@ export function SettingsForm() {
     })
   }
 
+  const user = data?.user
+
   return (
     <div className="mx-auto max-w-3xl">
       <Card className="bg-card border-border">
@@ -70,30 +82,66 @@ export function SettingsForm() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-secondary">
+            <TabsList className="grid w-full grid-cols-2 bg-secondary">
               <TabsTrigger value="general">Geral</TabsTrigger>
               <TabsTrigger value="notifications">Notificações</TabsTrigger>
-              <TabsTrigger value="integrations">Integrações</TabsTrigger>
             </TabsList>
             <TabsContent value="general" className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
-                <Input id="name" defaultValue="Usuário" className="bg-background border-border" />
+                <Input id="name" defaultValue={user?.name ?? ''} className="bg-background border-border cursor-not-allowed" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" defaultValue="usuario@exemplo.com" className="bg-background border-border" />
+                <Input id="email" defaultValue={user?.email ?? ''} className="bg-background border-border cursor-not-allowed" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="timezone">Fuso Horário</Label>
-                <Input id="timezone" defaultValue="America/Sao_Paulo" className="bg-background border-border" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="dark-mode">Modo Escuro</Label>
-                  <p className="text-sm text-muted-foreground">Ativar o modo escuro para a interface</p>
-                </div>
-                <Switch id="dark-mode" defaultChecked />
+              <Label htmlFor="email">Fuso horário</Label>
+                <Popover open={openTimezone} onOpenChange={setOpenTimezone}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openTimezone}
+                        className="w-full justify-between bg-background border-border"
+                      >
+                         {timezoneOption ? timezoneOption : 'Selecione um timezone'}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-card border-border">
+                      <Command className="bg-card">
+                        <CommandInput placeholder="Buscar repositório..." className="border-border" />
+                        <CommandList>
+                          <CommandGroup>
+                            {timezones.map((timezone) => (
+                              <CommandItem
+                                key={timezone.value}
+                                value={timezone.value}
+                                onSelect={(currentValue) => {
+                                  setTimezone(currentValue)
+                                  setOpenTimezone(false)
+                                }}
+                                className=""
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4 text-primary-foreground",
+                                    timezoneOption === timezone.value ? "opacity-100" : "opacity-0",
+                                  )}
+                                />
+                                <div className="flex flex-col">
+                                  <span>{timezone.label}</span>
+                                 
+                                </div>
+            
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
               </div>
             </TabsContent>
             <TabsContent value="notifications" className="space-y-4 pt-4">
@@ -216,22 +264,6 @@ export function SettingsForm() {
                     <p className="text-sm text-muted-foreground">Receber notificações no WhatsApp</p>
                   </div>
                   <Switch id="whatsapp-notifications" disabled />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="integrations" className="space-y-4 pt-4">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">GitHub</h3>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Status da Conexão</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Conectado como <span className="font-medium">usuario</span>
-                    </p>
-                  </div>
-                  <Button variant="outline" size="sm" className="border-border bg-background">
-                    Reconectar
-                  </Button>
                 </div>
               </div>
             </TabsContent>

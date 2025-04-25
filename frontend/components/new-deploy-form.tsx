@@ -1,65 +1,95 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { CalendarIcon, Check, ChevronsUpDown, Info, Loader2 } from "lucide-react"
-import { format } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { useGitHubRepositories, useGitHubBranches, type Repository } from "@/components/github-repository-service"
+import { useState, useEffect } from "react";
+import {
+  CalendarIcon,
+  Check,
+  ChevronsUpDown,
+  Info,
+  Loader2,
+} from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import {
+  useGitHubRepositories,
+  useGitHubBranches,
+  type Repository,
+} from "@/components/github-repository-service";
 
 // Dados de exemplo para canais do Slack
-const slackChannels = [
-  { value: "deploys", label: "#deploys" },
-  { value: "alerts", label: "#alerts" },
-  { value: "dev-team", label: "#dev-team" },
-  { value: "prod-alerts", label: "#prod-alerts" },
-  { value: "monitoring", label: "#monitoring" },
-]
+const slackChannels: any[] = [];
 
 export function NewDeployForm() {
-  const [date, setDate] = useState<Date>()
-  const [openRepo, setOpenRepo] = useState(false)
-  const [openBranch, setOpenBranch] = useState(false)
-  const [repository, setRepository] = useState("")
-  const [branch, setBranch] = useState("")
-  const [environment, setEnvironment] = useState("staging")
-  const [successChannel, setSuccessChannel] = useState("")
-  const [failureChannel, setFailureChannel] = useState("")
+  const [date, setDate] = useState<Date>();
+  const [openRepo, setOpenRepo] = useState(false);
+  const [openBranch, setOpenBranch] = useState(false);
+  const [repository, setRepository] = useState("");
+  const [branch, setBranch] = useState("");
+  const [environment, setEnvironment] = useState("staging");
+  const [successChannel, setSuccessChannel] = useState("");
+  const [failureChannel, setFailureChannel] = useState("");
 
-  const { repositories, isLoading: isLoadingRepos } = useGitHubRepositories()
-  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null)
-  const { branches, isLoading: isLoadingBranches } = useGitHubBranches(selectedRepo?.full_name || "")
+  const { repositories, isLoading: isLoadingRepos } = useGitHubRepositories();
+  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null);
+  const { branches } = useGitHubBranches(selectedRepo?.full_name || "");
 
   // Atualiza o repositório selecionado quando o usuário escolhe um repositório
   useEffect(() => {
     if (repository) {
-      const repo = repositories.find((r) => r.name === repository)
-      setSelectedRepo(repo || null)
-      setBranch("") // Limpa a branch selecionada quando muda o repositório
+      const repo = repositories.find((r) => r.name === repository);
+      setSelectedRepo(repo || null);
+      setBranch(""); // Limpa a branch selecionada quando muda o repositório
     } else {
-      setSelectedRepo(null)
+      setSelectedRepo(null);
     }
-  }, [repository, repositories])
+  }, [repository, repositories]);
 
   return (
     <div className="mx-auto max-w-3xl">
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Novo Deploy</CardTitle>
-          <CardDescription>Configure e agende um novo deploy para homologação ou produção</CardDescription>
+          <CardDescription>
+            Configure e agende um novo deploy para homologação ou produção
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <Tabs defaultValue="repository" className="w-full">
@@ -78,7 +108,7 @@ export function NewDeployForm() {
                         variant="outline"
                         role="combobox"
                         aria-expanded={openRepo}
-                        className="w-full justify-between bg-background border-border"
+                        className="w-full hover:bg-secondary justify-between bg-background border-border"
                         disabled={isLoadingRepos}
                       >
                         {isLoadingRepos ? (
@@ -87,7 +117,8 @@ export function NewDeployForm() {
                             <span>Carregando repositórios...</span>
                           </div>
                         ) : repository ? (
-                          repositories.find((repo) => repo.name === repository)?.name || "Repositório não encontrado"
+                          repositories.find((repo) => repo.name === repository)
+                            ?.name || "Repositório não encontrado"
                         ) : (
                           "Selecione um repositório..."
                         )}
@@ -96,34 +127,50 @@ export function NewDeployForm() {
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-card border-border">
                       <Command className="bg-card">
-                        <CommandInput placeholder="Buscar repositório..." className="border-border" />
+                        <CommandInput
+                          placeholder="Buscar repositório..."
+                          className="border-border"
+                        />
                         <CommandList>
-                          <CommandEmpty>Nenhum repositório encontrado.</CommandEmpty>
+                          <CommandEmpty>
+                            Nenhum repositório encontrado.
+                          </CommandEmpty>
                           <CommandGroup>
                             {repositories.map((repo) => (
                               <CommandItem
                                 key={repo.id}
                                 value={repo.name}
                                 onSelect={(currentValue) => {
-                                  setRepository(currentValue === repository ? "" : currentValue)
-                                  setOpenRepo(false)
+                                  setRepository(
+                                    currentValue === repository
+                                      ? ""
+                                      : currentValue
+                                  );
+                                  setOpenRepo(false);
                                 }}
-                                className="hover:bg-secondary/50 aria-selected:bg-secondary/50"
+                                className=""
                               >
                                 <Check
                                   className={cn(
-                                    "mr-2 h-4 w-4 text-primary",
-                                    repository === repo.name ? "opacity-100" : "opacity-0",
+                                    "mr-2 h-4 w-4 text-primary-foreground",
+                                    repository === repo.name
+                                      ? "opacity-100"
+                                      : "opacity-0"
                                   )}
                                 />
                                 <div className="flex flex-col">
                                   <span>{repo.name}</span>
                                   {repo.description && (
-                                    <span className="text-xs text-muted-foreground">{repo.description}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {repo.description}
+                                    </span>
                                   )}
                                 </div>
                                 {repo.private && (
-                                  <Badge variant="outline" className="ml-auto bg-secondary/50 text-xs">
+                                  <Badge
+                                    variant="outline"
+                                    className="ml-auto bg-secondary/50 text-xs"
+                                  >
                                     Privado
                                   </Badge>
                                 )}
@@ -157,55 +204,49 @@ export function NewDeployForm() {
                         variant="outline"
                         role="combobox"
                         aria-expanded={openBranch}
-                        className="w-full justify-between bg-background border-border"
-                        disabled={!repository || isLoadingBranches}
+                        className="w-full hover:bg-secondary justify-between bg-background border-border"
+                        disabled={!repository}
                       >
-                        {isLoadingBranches ? (
-                          <div className="flex items-center">
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            <span>Carregando branches...</span>
-                          </div>
-                        ) : branch ? (
-                          branch
-                        ) : selectedRepo ? (
-                          "Selecione uma branch..."
-                        ) : (
-                          "Selecione um repositório primeiro"
-                        )}
+                        {branch
+                          ? branch
+                          : selectedRepo
+                          ? "Selecione uma branch..."
+                          : "Selecione um repositório primeiro"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-card border-border">
                       <Command className="bg-card">
-                        <CommandInput placeholder="Buscar branch..." className="border-border" />
+                        <CommandInput
+                          placeholder="Buscar branch..."
+                          className="border-border"
+                        />
                         <CommandList>
-                          <CommandEmpty>Nenhuma branch encontrada.</CommandEmpty>
+                          <CommandEmpty>
+                            Nenhuma branch encontrada.
+                          </CommandEmpty>
                           <CommandGroup>
-                            {selectedRepo?.branches?.map((b) => (
+                            {branches.map((b) => (
                               <CommandItem
                                 key={b.name}
                                 value={b.name}
                                 onSelect={(currentValue) => {
-                                  setBranch(currentValue === branch ? "" : currentValue)
-                                  setOpenBranch(false)
+                                  setBranch(
+                                    currentValue === branch ? "" : currentValue
+                                  );
+                                  setOpenBranch(false);
                                 }}
                                 className="hover:bg-secondary/50 aria-selected:bg-secondary/50"
                               >
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4 text-primary",
-                                    branch === b.name ? "opacity-100" : "opacity-0",
+                                    branch === b.name
+                                      ? "opacity-100"
+                                      : "opacity-0"
                                   )}
                                 />
                                 {b.name}
-                                {selectedRepo.default_branch === b.name && (
-                                  <Badge
-                                    variant="outline"
-                                    className="ml-2 bg-primary/10 text-primary border-primary/20 text-xs"
-                                  >
-                                    Padrão
-                                  </Badge>
-                                )}
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -214,17 +255,22 @@ export function NewDeployForm() {
                     </PopoverContent>
                   </Popover>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Você pode digitar para filtrar ou buscar uma branch específica.
+                    Você pode digitar para filtrar ou buscar uma branch
+                    específica.
                   </p>
                 </div>
 
-                <Alert variant="outline" className="mt-2 border-primary/20 bg-primary/5">
+                <Alert
+                  variant="default"
+                  className="mt-2 border-primary/20 bg-primary/5"
+                >
                   <Info className="h-4 w-4 text-primary" />
                   <AlertTitle>Dica</AlertTitle>
                   <AlertDescription>
-                    Selecione o ambiente de destino e a branch específica que deseja implantar. Para produção,
-                    recomenda-se usar branches estáveis como main ou master. Para homologação, branches como develop,
-                    staging ou feature/* são mais adequadas.
+                    Selecione o ambiente de destino e a branch específica que
+                    deseja implantar. Para produção, recomenda-se usar branches
+                    estáveis como main ou master. Para homologação, branches
+                    como develop, staging ou feature/* são mais adequadas.
                   </AlertDescription>
                 </Alert>
               </div>
@@ -238,12 +284,14 @@ export function NewDeployForm() {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full justify-start text-left font-normal bg-background border-border",
-                          !date && "text-muted-foreground",
+                          "w-full justify-start hover:bg-secondary text-left font-normal bg-background border-border",
+                          !date && "text-muted-foreground"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "PPP", { locale: ptBR }) : "Selecione uma data"}
+                        {date
+                          ? format(date, "PPP", { locale: ptBR })
+                          : "Selecione uma data"}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 bg-card border-border">
@@ -286,15 +334,21 @@ export function NewDeployForm() {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <Checkbox id="reminder-day" />
-                    <Label htmlFor="reminder-day">Lembrar no dia do deploy</Label>
+                    <Label htmlFor="reminder-day">
+                      Lembrar no dia do deploy
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox id="reminder-day-before" />
-                    <Label htmlFor="reminder-day-before">Lembrar 1 dia antes</Label>
+                    <Label htmlFor="reminder-day-before">
+                      Lembrar 1 dia antes
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Checkbox id="reminder-week-before" />
-                    <Label htmlFor="reminder-week-before">Lembrar 1 semana antes</Label>
+                    <Label htmlFor="reminder-week-before">
+                      Lembrar 1 semana antes
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -303,25 +357,40 @@ export function NewDeployForm() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Canais de Notificação</Label>
-                  <RadioGroup defaultValue="slack" className="flex flex-col space-y-1">
+                  <RadioGroup
+                    defaultValue="slack"
+                    className="flex flex-col space-y-1"
+                  >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="slack" id="slack" />
                       <Label htmlFor="slack">Slack</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="email" id="email" disabled />
-                      <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground">
+                      <Label
+                        htmlFor="email"
+                        className="flex items-center gap-2 text-muted-foreground"
+                      >
                         Email
-                        <Badge variant="outline" className="bg-secondary/50 text-muted-foreground">
+                        <Badge
+                          variant="outline"
+                          className="bg-secondary/50 text-muted-foreground"
+                        >
                           Em breve
                         </Badge>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="whatsapp" id="whatsapp" disabled />
-                      <Label htmlFor="whatsapp" className="flex items-center gap-2 text-muted-foreground">
+                      <Label
+                        htmlFor="whatsapp"
+                        className="flex items-center gap-2 text-muted-foreground"
+                      >
                         WhatsApp
-                        <Badge variant="outline" className="bg-secondary/50 text-muted-foreground">
+                        <Badge
+                          variant="outline"
+                          className="bg-secondary/50 text-muted-foreground"
+                        >
                           Em breve
                         </Badge>
                       </Label>
@@ -333,8 +402,13 @@ export function NewDeployForm() {
                   <h3 className="text-sm font-medium">Configuração do Slack</h3>
 
                   <div className="space-y-2">
-                    <Label htmlFor="success-channel">Canal para notificações de sucesso</Label>
-                    <Select value={successChannel} onValueChange={setSuccessChannel}>
+                    <Label htmlFor="success-channel">
+                      Canal para notificações de sucesso
+                    </Label>
+                    <Select
+                      value={successChannel}
+                      onValueChange={setSuccessChannel}
+                    >
                       <SelectTrigger className="w-full bg-background border-border">
                         <SelectValue placeholder="Selecione um canal" />
                       </SelectTrigger>
@@ -349,8 +423,13 @@ export function NewDeployForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="failure-channel">Canal para notificações de falha</Label>
-                    <Select value={failureChannel} onValueChange={setFailureChannel}>
+                    <Label htmlFor="failure-channel">
+                      Canal para notificações de falha
+                    </Label>
+                    <Select
+                      value={failureChannel}
+                      onValueChange={setFailureChannel}
+                    >
                       <SelectTrigger className="w-full bg-background border-border">
                         <SelectValue placeholder="Selecione um canal" />
                       </SelectTrigger>
@@ -363,13 +442,16 @@ export function NewDeployForm() {
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground">
-                      Você pode selecionar o mesmo canal para ambos os tipos de notificação.
+                      Você pode selecionar o mesmo canal para ambos os tipos de
+                      notificação.
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="notification-message">Mensagem de Notificação</Label>
+                  <Label htmlFor="notification-message">
+                    Mensagem de Notificação
+                  </Label>
                   <Textarea
                     id="notification-message"
                     placeholder="Digite a mensagem que será enviada nas notificações..."
@@ -377,17 +459,22 @@ export function NewDeployForm() {
                     className="min-h-[120px] bg-background border-border"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Use {"{repositório}"}, {"{branch}"}, {"{data}"}, {"{hora}"} e {"{status}"} como variáveis que serão
-                    substituídas automaticamente.
+                    Use {"{repositório}"}, {"{branch}"}, {"{data}"}, {"{hora}"}{" "}
+                    e {"{status}"} como variáveis que serão substituídas
+                    automaticamente.
                   </p>
                 </div>
 
-                <Alert variant="outline" className="border-primary/20 bg-primary/5">
+                <Alert
+                  variant="default"
+                  className="border-primary/20 bg-primary/5"
+                >
                   <Info className="h-4 w-4 text-primary" />
                   <AlertTitle>Dica</AlertTitle>
                   <AlertDescription>
-                    Configurar canais diferentes para notificações de sucesso e falha ajuda a direcionar as informações
-                    para as equipes corretas e facilita o monitoramento.
+                    Configurar canais diferentes para notificações de sucesso e
+                    falha ajuda a direcionar as informações para as equipes
+                    corretas e facilita o monitoramento.
                   </AlertDescription>
                 </Alert>
               </div>
@@ -398,9 +485,11 @@ export function NewDeployForm() {
           <Button variant="outline" className="border-border bg-background">
             Cancelar
           </Button>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Agendar Deploy</Button>
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+            Agendar Deploy
+          </Button>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

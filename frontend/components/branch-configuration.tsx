@@ -13,46 +13,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-
-// Dados de exemplo - em uma aplicação real, estes viriam de uma API ou banco de dados
-const initialRepositories = [
-  {
-    id: "1",
-    name: "api-service",
-    productionBranch: "main",
-    stagingBranch: "develop",
-  },
-  {
-    id: "2",
-    name: "web-client",
-    productionBranch: "master",
-    stagingBranch: "staging",
-  },
-  {
-    id: "3",
-    name: "admin-dashboard",
-    productionBranch: "main",
-    stagingBranch: "develop",
-  },
-  {
-    id: "4",
-    name: "mobile-app",
-    productionBranch: "main",
-    stagingBranch: "staging",
-  },
-]
-
-const availableBranches = [
-  { value: "main", label: "main" },
-  { value: "master", label: "master" },
-  { value: "develop", label: "develop" },
-  { value: "staging", label: "staging" },
-  { value: "release", label: "release" },
-  { value: "feature/user-profile", label: "feature/user-profile" },
-  { value: "feature/payment-gateway", label: "feature/payment-gateway" },
-  { value: "hotfix/login-issue", label: "hotfix/login-issue" },
-]
-
 interface RepositoryConfig {
   id: string
   name: string
@@ -61,7 +21,7 @@ interface RepositoryConfig {
 }
 
 export function BranchConfiguration() {
-  const [repositories, setRepositories] = useState<RepositoryConfig[]>(initialRepositories)
+  const [repositories, setRepositories] = useState<RepositoryConfig[]>([])
   const [newRepoName, setNewRepoName] = useState("")
   const [openBranchMenus, setOpenBranchMenus] = useState<Record<string, { prod: boolean; staging: boolean }>>({})
   const { toast } = useToast()
@@ -118,6 +78,8 @@ export function BranchConfiguration() {
     })
   }
 
+  const availableBranches: any[] = []
+
   return (
     <div className="container mx-auto py-6">
       <Card className="bg-card border-border">
@@ -128,7 +90,7 @@ export function BranchConfiguration() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Alert variant="outline" className="border-primary/20 bg-primary/5">
+          <Alert variant="default" className="border-primary/20 bg-primary/5">
             <Info className="h-4 w-4 text-primary" />
             <AlertTitle>Importante</AlertTitle>
             <AlertDescription>

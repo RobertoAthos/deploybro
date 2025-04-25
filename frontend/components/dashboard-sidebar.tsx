@@ -23,7 +23,7 @@ export function DashboardSidebar({ selectedTab, setSelectedTab }: DashboardSideb
     <Sidebar className="border-r border-border bg-sidebar">
       <SidebarHeader className="flex items-center gap-2 px-4 py-2 border-b border-border">
         <Rocket className="h-6 w-6 text-primary" />
-        <span className="text-lg font-bold text-primary">DeployMate</span>
+        <span className="text-lg font-bold text-primary">DeployBro</span>
       </SidebarHeader>
       <SidebarSeparator />
       <SidebarContent>

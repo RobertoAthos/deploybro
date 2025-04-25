@@ -7,9 +7,8 @@ import { NextAuthProvider } from "@/components/next-auth-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "DeployMate - Automação de Deploy",
+  title: "DeployBro - Automação de Deploy",
   description: "Plataforma de automação de deploy para seus projetos",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({

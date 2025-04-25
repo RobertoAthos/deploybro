@@ -1,0 +1,27 @@
+export const timezones = [
+    { value: "UTC", label: "UTC (Tempo Universal Coordenado)" },
+    { value: "America/Sao_Paulo", label: "America/Sao_Paulo (Brasília)" },
+    { value: "America/Manaus", label: "America/Manaus" },
+    { value: "America/Belem", label: "America/Belem" },
+    { value: "America/Fortaleza", label: "America/Fortaleza" },
+    { value: "America/Recife", label: "America/Recife" },
+    { value: "America/Boa_Vista", label: "America/Boa_Vista" },
+    { value: "America/Rio_Branco", label: "America/Rio_Branco" },
+    { value: "America/New_York", label: "America/New_York (Nova York)" },
+    { value: "America/Chicago", label: "America/Chicago (Chicago)" },
+    { value: "America/Denver", label: "America/Denver (Denver)" },
+    { value: "America/Los_Angeles", label: "America/Los_Angeles (Los Angeles)" },
+    { value: "Europe/London", label: "Europe/London (Londres)" },
+    { value: "Europe/Berlin", label: "Europe/Berlin (Berlim)" },
+    { value: "Europe/Madrid", label: "Europe/Madrid (Madrid)" },
+    { value: "Europe/Paris", label: "Europe/Paris (Paris)" },
+    { value: "Europe/Rome", label: "Europe/Rome (Roma)" },
+    { value: "Europe/Moscow", label: "Europe/Moscow (Moscou)" },
+    { value: "Asia/Tokyo", label: "Asia/Tokyo (Tóquio)" },
+    { value: "Asia/Shanghai", label: "Asia/Shanghai (Xangai)" },
+    { value: "Asia/Singapore", label: "Asia/Singapore (Singapura)" },
+    { value: "Asia/Dubai", label: "Asia/Dubai (Dubai)" },
+    { value: "Australia/Sydney", label: "Australia/Sydney (Sydney)" },
+    { value: "Pacific/Auckland", label: "Pacific/Auckland (Auckland)" }
+  ];
+  

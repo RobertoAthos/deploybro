@@ -13,7 +13,7 @@
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 24 100% 50%;
+    --primary: 45 100% 70%; /* FFD369 in HSL */
     --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 12%;
