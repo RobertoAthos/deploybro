@@ -1,0 +1,9 @@
+export enum DeployStatus {
+    PENDING = "PENDING",
+    IN_PROGRESS = "IN_PROGRESS",
+    SUCCESS = "SUCCESS",
+    FAILURE = "FAILURE",
+    CANCELLED = "CANCELLED",
+    TIMEOUT = "TIMEOUT",
+    ERROR = "ERROR"
+}

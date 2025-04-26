@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "rootDir": "./src",                // Tell TypeScript that your source files are in "src"
+    "outDir": "./dist",                 // Compiled JS files will go into "dist"
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": "./src",                 // Allow absolute imports from "src"
+    "paths": {
+      "*": ["*"]                        // Optional, can improve if you want custom alias
+    }
+  },
+  "include": ["src"],                   // Include only the "src" folder for compilation
+  "exclude": ["node_modules", "dist"]    // Exclude build folders
+}
