@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn } from "typeorm";
 import { User } from "./User";
 import { DeploySchedule } from "./DeploySchedule";
 
@@ -28,4 +28,10 @@ export class Repository {
 
   @OneToMany(() => DeploySchedule, deploySchedule => deploySchedule.repository)
   deploySchedules: DeploySchedule[];
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  updated_at: Date;
 }

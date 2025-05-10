@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from "typeorm";
 import { User } from "./User";
 
 @Entity("slack_channels")
@@ -15,4 +15,10 @@ export class SlackChannel {
   @ManyToOne(() => User, user => user.repositories)
   @JoinColumn({ name: "user_exteral_id" })
   user: User;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  updated_at: Date;
 }

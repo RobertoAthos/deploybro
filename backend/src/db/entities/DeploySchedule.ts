@@ -32,10 +32,13 @@ export class DeploySchedule {
   @Column({ nullable: true })
   aws_console_url: string;
 
-  @CreateDateColumn()
-  created_at: Date;
-
   @ManyToOne(() => Repository, repository => repository.deploySchedules)
   @JoinColumn({ name: "repo_external_id" })
   repository: Repository;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  updated_at: Date;
 }
